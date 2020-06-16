@@ -2,14 +2,14 @@
 
 #import "ViewController.h"
 #import "OpenWeatherMapAPI.h"
-
+#import "WeatherCollectionViewCell.h"
 #define kUpdateInterval 3600
 
-@interface ViewController ()
+@interface ViewController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
-@property (weak, nonatomic) IBOutlet UILabel *degreesLabel;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) NSDate *lastUpdate;
+@property (weak, nonatomic) IBOutlet UICollectionView *weatherCollectionOutlet;
 
 @end
 
@@ -20,6 +20,10 @@
     
     self.locationManager = [[CLLocationManager alloc] init];
     [self enableLocationServices];
+    self.weatherCollectionOutlet.delegate = self;
+    self.weatherCollectionOutlet.dataSource = self;
+    self.weatherCollectionOutlet.layer.borderWidth = 0.5f;
+    self.weatherCollectionOutlet.layer.borderColor = UIColor.whiteColor.CGColor;
 }
 
 
@@ -63,7 +67,7 @@
             NSString *tempString = weatherData.records.locations.firstObject.location.firstObject.weatherElement.firstObject.time.firstObject.elementValue.firstObject.value;
                                                                         
                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                            self.degreesLabel.text = tempString;
+//                                            self.degreesLabel.text = tempString;
                                             self.lastUpdate = [NSDate date];
                                         });
                                     }
@@ -96,6 +100,21 @@
 
 
 
+
+
+- (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath { 
+    WeatherCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"weathercollectioncell" forIndexPath:indexPath];
+    [cell setModel:@"下午1點" Weather:@"多雲" Temperature:@"35"];
+    return cell;
+}
+
+- (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section { 
+    return 8;
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return 1;
+}
 
 
 @end

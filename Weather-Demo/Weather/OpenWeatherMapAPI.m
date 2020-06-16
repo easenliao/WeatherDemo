@@ -25,8 +25,7 @@ NSDictionary *cityDicionary;
         if(placemarks && placemarks.count > 0)
         {
             CLPlacemark *placemark= [placemarks objectAtIndex:0];
-
-            NSString *urlString = [NSString stringWithFormat:@"https://opendata.cwb.gov.tw/api/v1/rest/datastore/%@?Authorization=%s&locationName=%@",cityDicionary[placemark.subAdministrativeArea],kOpenWeatherMapAPIKey,placemark.locality];
+            NSString *urlString = [NSString stringWithFormat:@"https://opendata.cwb.gov.tw/api/v1/rest/datastore/%@?Authorization=%s&locationName=%@&elementName=WeatherDescription,PoP12h,Wx,T,UVI",cityDicionary[placemark.subAdministrativeArea],kOpenWeatherMapAPIKey,placemark.locality];
             NSURLSession *session = [NSURLSession sharedSession];
             NSURL *url = [NSURL URLWithString:[urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
             
