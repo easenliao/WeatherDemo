@@ -14,7 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) NSString *locationName;
 @property (strong, nonatomic) NSString *t;
 @property (strong, nonatomic) NSString *wx;
--(id)init:(NSString *) locationName T:(NSString *) t Wx:(NSString *) wx;
+@property (strong, nonatomic) NSString *pop;
+@property (strong, nonatomic) NSString *relativeHumidity;
+@property (strong, nonatomic) NSString *apparentTemperature;
+@property (strong, nonatomic) NSString *comfortIndex;
+@property (strong, nonatomic) NSString *windSpeed;
+@property (strong, nonatomic) NSString *windDirection;
+@property (strong, nonatomic) NSString *weatherDescription;
+@property (strong, nonatomic) NSString *week;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -17,7 +17,8 @@
 		0A8821CD1F5B5423004F78C5 /* WeatherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8821CC1F5B5423004F78C5 /* WeatherTests.m */; };
 		0A8821D91F5B5FB3004F78C5 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8821D81F5B5FB3004F78C5 /* CoreLocation.framework */; };
 		0A8821DC1F5CCA45004F78C5 /* OpenWeatherMapAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8821DB1F5CCA45004F78C5 /* OpenWeatherMapAPI.m */; };
-		0A8821E01F5F084B004F78C5 /* WeatherData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8821DF1F5F084B004F78C5 /* WeatherData.m */; };
+		9D4A9AA2249B1FEB004482DE /* DetailWeatherTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D4A9AA1249B1FEB004482DE /* DetailWeatherTableViewController.m */; };
+		9D4A9AA5249B7253004482DE /* WeatherViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D4A9AA4249B7253004482DE /* WeatherViewModel.m */; };
 		9D82C8B02499EB1300472E62 /* WeaterCollevtionViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D82C8AF2499EB1300472E62 /* WeaterCollevtionViewModel.m */; };
 		9D82C8B32499F89500472E62 /* WeatherModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D82C8B22499F89500472E62 /* WeatherModel.m */; };
 		9D82C8B7249A1C8000472E62 /* MainPageViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D82C8B6249A1C8000472E62 /* MainPageViewModel.m */; };
@@ -63,8 +64,10 @@
 		0A8821D81F5B5FB3004F78C5 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0A8821DA1F5CCA45004F78C5 /* OpenWeatherMapAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenWeatherMapAPI.h; sourceTree = "<group>"; };
 		0A8821DB1F5CCA45004F78C5 /* OpenWeatherMapAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenWeatherMapAPI.m; sourceTree = "<group>"; };
-		0A8821DE1F5F084B004F78C5 /* WeatherData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherData.h; sourceTree = "<group>"; };
-		0A8821DF1F5F084B004F78C5 /* WeatherData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherData.m; sourceTree = "<group>"; };
+		9D4A9AA0249B1FEB004482DE /* DetailWeatherTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailWeatherTableViewController.h; sourceTree = "<group>"; };
+		9D4A9AA1249B1FEB004482DE /* DetailWeatherTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailWeatherTableViewController.m; sourceTree = "<group>"; };
+		9D4A9AA3249B7253004482DE /* WeatherViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeatherViewModel.h; sourceTree = "<group>"; };
+		9D4A9AA4249B7253004482DE /* WeatherViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeatherViewModel.m; sourceTree = "<group>"; };
 		9D82C8AE2499EB1300472E62 /* WeaterCollevtionViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeaterCollevtionViewModel.h; sourceTree = "<group>"; };
 		9D82C8AF2499EB1300472E62 /* WeaterCollevtionViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeaterCollevtionViewModel.m; sourceTree = "<group>"; };
 		9D82C8B12499F89500472E62 /* WeatherModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeatherModel.h; sourceTree = "<group>"; };
@@ -139,7 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				9D82C8B4249A1C5600472E62 /* MainPageViewModel */,
-				9D82C8A82499CCE100472E62 /* ViewModel */,
+				9D82C8A82499CCE100472E62 /* Model */,
 				9DD487982498BCB100D98E4D /* WeatherView */,
 				9DD487912498A27300D98E4D /* CollectionCell */,
 				9DF5A01A2497750A00098FFC /* WeatherModel */,
@@ -155,9 +158,9 @@
 				0A8821AF1F5B5423004F78C5 /* Supporting Files */,
 				0A8821DA1F5CCA45004F78C5 /* OpenWeatherMapAPI.h */,
 				0A8821DB1F5CCA45004F78C5 /* OpenWeatherMapAPI.m */,
-				0A8821DE1F5F084B004F78C5 /* WeatherData.h */,
-				0A8821DF1F5F084B004F78C5 /* WeatherData.m */,
 				9DF5A0192497162C00098FFC /* Keys.h */,
+				9D4A9AA0249B1FEB004482DE /* DetailWeatherTableViewController.h */,
+				9D4A9AA1249B1FEB004482DE /* DetailWeatherTableViewController.m */,
 			);
 			path = Weather;
 			sourceTree = "<group>";
@@ -187,13 +190,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		9D82C8A82499CCE100472E62 /* ViewModel */ = {
+		9D82C8A82499CCE100472E62 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				9D82C8B12499F89500472E62 /* WeatherModel.h */,
 				9D82C8B22499F89500472E62 /* WeatherModel.m */,
 			);
-			name = ViewModel;
+			name = Model;
 			sourceTree = "<group>";
 		};
 		9D82C8B4249A1C5600472E62 /* MainPageViewModel */ = {
@@ -222,6 +225,8 @@
 				9DD487992498BCD200D98E4D /* WeatherView.h */,
 				9DD4879A2498BCD200D98E4D /* WeatherView.m */,
 				9DD4879C2498BCE900D98E4D /* WeatherView.xib */,
+				9D4A9AA3249B7253004482DE /* WeatherViewModel.h */,
+				9D4A9AA4249B7253004482DE /* WeatherViewModel.m */,
 			);
 			name = WeatherView;
 			sourceTree = "<group>";
@@ -300,12 +305,12 @@
 				TargetAttributes = {
 					0A8821AB1F5B5423004F78C5 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = DHSEJVG8L2;
+						DevelopmentTeam = 5RJ437MC72;
 						ProvisioningStyle = Automatic;
 					};
 					0A8821C71F5B5423004F78C5 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = DHSEJVG8L2;
+						DevelopmentTeam = 5RJ437MC72;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 0A8821AB1F5B5423004F78C5;
 					};
@@ -373,10 +378,11 @@
 				9DF5A0652497798200098FFC /* Weather.m in Sources */,
 				0A8821B41F5B5423004F78C5 /* AppDelegate.m in Sources */,
 				9DF5A0642497798200098FFC /* Result.m in Sources */,
-				0A8821E01F5F084B004F78C5 /* WeatherData.m in Sources */,
 				9DD487942498A2CB00D98E4D /* WeatherCollectionViewCell.m in Sources */,
 				0A8821B11F5B5423004F78C5 /* main.m in Sources */,
 				9DF5A0612497798200098FFC /* WeatherElement.m in Sources */,
+				9D4A9AA5249B7253004482DE /* WeatherViewModel.m in Sources */,
+				9D4A9AA2249B1FEB004482DE /* DetailWeatherTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -514,7 +520,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = DHSEJVG8L2;
+				DEVELOPMENT_TEAM = 5RJ437MC72;
 				INFOPLIST_FILE = Weather/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.EasenLiao.Weather;
@@ -526,7 +532,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = DHSEJVG8L2;
+				DEVELOPMENT_TEAM = 5RJ437MC72;
 				INFOPLIST_FILE = Weather/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.EasenLiao.Weather;
@@ -538,7 +544,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = DHSEJVG8L2;
+				DEVELOPMENT_TEAM = 5RJ437MC72;
 				INFOPLIST_FILE = WeatherTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.EasenLiao.WeatherTests;
@@ -551,7 +557,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = DHSEJVG8L2;
+				DEVELOPMENT_TEAM = 5RJ437MC72;
 				INFOPLIST_FILE = WeatherTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.EasenLiao.WeatherTests;

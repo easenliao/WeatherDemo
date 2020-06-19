@@ -28,7 +28,7 @@ NSDictionary *cityDicionary;
     NSString *string = [NSString stringWithFormat:@"%@T%@",currentDateString,currentTimeString ];
     return  string;
 }
-- (void)fetchCurrentWeatherEveryThreeHourDataForLocation:(CLLocation *)location completion:(void(^)(Weather *weatherEveryThreeHourData))completion failure:(void(^)(NSError* error))failure{
+- (void)fetchCurrentWeatherEveryThreeHourDataForLocation:(CLLocation *)location APIURL:(NSString *) url completion:(void(^)(Weather *weatherEveryThreeHourData))completion failure:(void(^)(NSError* error))failure{
 
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"zh_TW"];
@@ -40,7 +40,8 @@ NSDictionary *cityDicionary;
         if(placemarks && placemarks.count > 0)
         {
             CLPlacemark *placemark= [placemarks objectAtIndex:0];
-            NSString *urlString = [NSString stringWithFormat:@"https://opendata.cwb.gov.tw/api/v1/rest/datastore/%@?Authorization=%s&locationName=%@&elementName=WeatherDescription,PoP12h,Wx,T,UVI,MaxT,MinT&timeFrom=%@",cityDicionary[placemark.subAdministrativeArea],kOpenWeatherMapAPIKey,placemark.locality,[self getNowTime] ];
+            NSString *urlString = [NSString stringWithFormat:@"https://opendata.cwb.gov.tw/api/v1/rest/datastore/%@?Authorization=%s&locationName=%@",url,kOpenWeatherMapAPIKey,placemark.locality ];
+
             NSURLSession *session = [NSURLSession sharedSession];
             NSURL *url = [NSURL URLWithString:[urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
             
