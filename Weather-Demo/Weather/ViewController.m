@@ -41,7 +41,6 @@
     if ([segueName isEqualToString: @"DetailWeatherTableViewController"]) {
         DetailWeatherTableViewController * childViewController = (DetailWeatherTableViewController *) [segue destinationViewController];
         self.containerView = childViewController;
-        // do something with the AlertView's subviews here...
     }
 }
 
@@ -103,12 +102,13 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
     if ([[NSDate date] timeIntervalSinceDate:self.lastUpdate] > kUpdateInterval || !self.lastUpdate) {
         
+        /// threedays weather
         [[OpenWeatherMapAPI sharedInstance]
-         fetchCurrentWeatherEveryThreeHourDataForLocation:[locations lastObject] APIURL:@"F-D0047-073"
-         completion:^(Weather *weatherEveryThreeHourData) {
+         fetchCurrentWeatherDataForLocation:[locations lastObject] APIURL:@"F-D0047-073"
+         completion:^(Weather *weatherData) {
             MainPageViewModel *model = [MainPageViewModel alloc];
-            model = [WeatherModel getMainPageViewModel:weatherEveryThreeHourData.records.locations.firstObject.location.firstObject];
-            self.collectionData = [WeatherModel getCollectViews:weatherEveryThreeHourData.records.locations.firstObject.location.firstObject.weatherElement];
+            model = [WeatherModel getMainPageViewModel:weatherData.records.locations.firstObject.location.firstObject];
+            self.collectionData = [WeatherModel getCollectViews:weatherData.records.locations.firstObject.location.firstObject.weatherElement];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self setMainPage:model];
                 [self.weatherCollectionOutlet reloadData];
@@ -121,10 +121,11 @@
             NSLog(@"Failed: %@",error);
         }
          ];
+        /// a week weather
         [[OpenWeatherMapAPI sharedInstance]
-         fetchCurrentWeatherEveryThreeHourDataForLocation:[locations lastObject] APIURL:@"F-D0047-075"
-         completion:^(Weather *weatherEveryThreeHourData) {
-            NSDictionary<NSString *,WeatherViewModel *> *model = [WeatherModel getWeatherViewModels:weatherEveryThreeHourData.records.locations.firstObject.location.firstObject];
+         fetchCurrentWeatherDataForLocation:[locations lastObject] APIURL:@"F-D0047-075"
+         completion:^(Weather *weatherData) {
+            NSDictionary<NSString *,WeatherViewModel *> *model = [WeatherModel getWeatherViewModels:weatherData.records.locations.firstObject.location.firstObject];
             NSArray *weeks = [WeatherModel getSevenDayWeekFormNow];
             NSMutableArray<WeatherViewModel *> *weatherViews = [NSMutableArray array];
             for (NSString *item in weeks) {
@@ -166,8 +167,7 @@
 
 
 
-
-
+#pragma mark - UICollectionViewDelegate Methods
 
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath { 
     WeatherCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"weathercollectioncell" forIndexPath:indexPath];
@@ -184,24 +184,18 @@
     return 1;
 }
 
+#pragma mark - UIScrollViewDelegate Methods
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
     *targetContentOffset = scrollView.contentOffset;
-    if (scrollView.contentOffset.y > 0){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [UIView animateWithDuration:1 animations:^{
-                self.summaryHeightOutlet.constant = 0;
-                [self.summaryViewOutlet setHidden:YES];
-            }];
-        });
-        
-    }else{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [UIView animateWithDuration:1 animations:^{
-                self.summaryHeightOutlet.constant = 150;
-                [self.summaryViewOutlet setHidden:NO];
-            }];
-        });
-        
-    }
+    [self isShowSummaryView:(scrollView.contentOffset.y <= 0)];
+}
+-(void) isShowSummaryView:(BOOL) isShow{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.2 animations:^{
+            self.summaryHeightOutlet.constant = isShow ? 150 : 0;
+            [self.summaryViewOutlet setHidden:!isShow];
+            [self.view layoutIfNeeded];
+        }];
+    });
 }
 @end

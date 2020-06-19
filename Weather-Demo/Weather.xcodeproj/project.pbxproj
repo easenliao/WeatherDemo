@@ -196,7 +196,7 @@
 				9D82C8B12499F89500472E62 /* WeatherModel.h */,
 				9D82C8B22499F89500472E62 /* WeatherModel.m */,
 			);
-			name = Model;
+			path = Model;
 			sourceTree = "<group>";
 		};
 		9D82C8B4249A1C5600472E62 /* MainPageViewModel */ = {
@@ -205,7 +205,7 @@
 				9D82C8B5249A1C8000472E62 /* MainPageViewModel.h */,
 				9D82C8B6249A1C8000472E62 /* MainPageViewModel.m */,
 			);
-			name = MainPageViewModel;
+			path = MainPageViewModel;
 			sourceTree = "<group>";
 		};
 		9DD487912498A27300D98E4D /* CollectionCell */ = {
@@ -216,7 +216,7 @@
 				9D82C8AE2499EB1300472E62 /* WeaterCollevtionViewModel.h */,
 				9D82C8AF2499EB1300472E62 /* WeaterCollevtionViewModel.m */,
 			);
-			name = CollectionCell;
+			path = CollectionCell;
 			sourceTree = "<group>";
 		};
 		9DD487982498BCB100D98E4D /* WeatherView */ = {
@@ -228,7 +228,7 @@
 				9D4A9AA3249B7253004482DE /* WeatherViewModel.h */,
 				9D4A9AA4249B7253004482DE /* WeatherViewModel.m */,
 			);
-			name = WeatherView;
+			path = WeatherView;
 			sourceTree = "<group>";
 		};
 		9DF5A01A2497750A00098FFC /* WeatherModel */ = {
@@ -253,7 +253,7 @@
 				9DF5A05C2497798100098FFC /* WeatherElement.h */,
 				9DF5A0542497798100098FFC /* WeatherElement.m */,
 			);
-			name = WeatherModel;
+			path = WeatherModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -13,22 +13,8 @@ NSDictionary *cityDicionary;
     
     return sharedInstance;
 }
-/// yyyy-MM-ddThh:mm:ss
-- (NSString *)getNowTime{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"zh_Hant_TW"]];
-    [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"Asia/Taipei"]];
-    [formatter setDateFormat:@"yyyy-MM-ddTHH:mm:ss"];
-    // Date to string
-    NSDate *now = [NSDate date];
-    NSString *currentDateString = [formatter stringFromDate:now];
-    [formatter setDateFormat:@"HH:mm:ss"];
-    NSString *currentTimeString = [formatter stringFromDate:now];
-    
-    NSString *string = [NSString stringWithFormat:@"%@T%@",currentDateString,currentTimeString ];
-    return  string;
-}
-- (void)fetchCurrentWeatherEveryThreeHourDataForLocation:(CLLocation *)location APIURL:(NSString *) url completion:(void(^)(Weather *weatherEveryThreeHourData))completion failure:(void(^)(NSError* error))failure{
+
+- (void)fetchCurrentWeatherDataForLocation:(CLLocation *)location APIURL:(NSString *) url completion:(void(^)(Weather *weatherData))completion failure:(void(^)(NSError* error))failure{
 
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"zh_TW"];
@@ -51,8 +37,8 @@ NSDictionary *cityDicionary;
                 } else {
                     NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
 
-                    Weather *weatherEveryThreeHour = [[Weather alloc] initWithDictionary:jsonObject];
-                    completion(weatherEveryThreeHour);
+                    Weather *weather = [[Weather alloc] initWithDictionary:jsonObject];
+                    completion(weather);
                 }
                 
             }] resume];

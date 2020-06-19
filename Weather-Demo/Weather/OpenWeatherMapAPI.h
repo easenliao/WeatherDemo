@@ -7,6 +7,6 @@
 
 + (OpenWeatherMapAPI *)sharedInstance;
 
-- (void)fetchCurrentWeatherEveryThreeHourDataForLocation:(CLLocation *)location APIURL:(NSString *) url completion:(void(^)(Weather *weatherEveryThreeHourData))completion failure:(void(^)(NSError* error))failure;
+- (void)fetchCurrentWeatherDataForLocation:(CLLocation *)location APIURL:(NSString *) url completion:(void(^)(Weather *weatherData))completion failure:(void(^)(NSError* error))failure;
 
 @end
