@@ -1,7 +1,6 @@
 
 #import "OpenWeatherMapAPI.h"
 #import "Keys.h"
-NSDictionary *cityDicionary;
 @implementation OpenWeatherMapAPI
 + (OpenWeatherMapAPI *)sharedInstance {
     static OpenWeatherMapAPI *sharedInstance = nil;
@@ -9,11 +8,23 @@ NSDictionary *cityDicionary;
     dispatch_once(&onceToken, ^{
         sharedInstance = [[OpenWeatherMapAPI alloc] init];
     });
-    cityDicionary = @{@"台中市":@"F-D0047-073"};
     
     return sharedInstance;
 }
-
+- (void)fetchWeekWeatherDataForLocation:(CLLocation *)location completion:(void(^)(Weather *weatherData))completion failure:(void(^)(NSError* error))failure{
+    [self fetchCurrentWeatherDataForLocation:location APIURL:@"F-D0047-075" completion:^(Weather *weatherData) {
+        completion(weatherData);
+    } failure:^(NSError *error) {
+        failure(error);
+    }];
+}
+- (void)fetchEveryThreeHourWeatherDataForLocation:(CLLocation *)location completion:(void(^)(Weather *weatherData))completion failure:(void(^)(NSError* error))failure{
+    [self fetchCurrentWeatherDataForLocation:location APIURL:@"F-D0047-073" completion:^(Weather *weatherData) {
+        completion(weatherData);
+    } failure:^(NSError *error) {
+        failure(error);
+    }];
+}
 - (void)fetchCurrentWeatherDataForLocation:(CLLocation *)location APIURL:(NSString *) url completion:(void(^)(Weather *weatherData))completion failure:(void(^)(NSError* error))failure{
 
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];

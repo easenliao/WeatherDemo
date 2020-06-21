@@ -6,87 +6,15 @@
 //  Copyright © 2020 Aron Beaver. All rights reserved.
 //
 
-#import "WeatherModel.h"
+#import "DateFormaterManager.h"
 #import "Weather.h"
-@implementation WeatherModel
-+ (NSArray<WeaterCollevtionViewModel *> *)getCollectViews:(NSArray< WeatherElement * > *)element{
-    NSArray<WeaterCollevtionViewModel *> *data;
-    NSMutableArray<WeaterCollevtionViewModel *> *temp = [NSMutableArray array];
-    for (WeatherElement *item in element) {
-        if ([item.elementName isEqualToString:@"Wx"]){
-            for (int i =0; i < [item.time count]; i++){
-                if ([temp count] <= i){
-                    WeaterCollevtionViewModel *model = [[WeaterCollevtionViewModel alloc]init];
-                    model.weatherDescription = item.time[i].elementValue.firstObject.value;
-                    model.time = [self changeDateFormat:item.time[i].startTime];
-                    [temp insertObject:model atIndex:i];
-                    
-                }else{
-                    temp[i].weatherDescription = item.time[i].elementValue.firstObject.value;
-                    temp[i].time = item.time[i].startTime;
-                }
-                
-            }
-        }
-        if ([item.elementName isEqualToString:@"T"]){
-            for (int i =0; i < [item.time count]; i++){
-                if ([temp count] <= i){
-                    WeaterCollevtionViewModel *model = [[WeaterCollevtionViewModel alloc]init];
-                    model.temperature = item.time[i].elementValue.firstObject.value;
-                    [temp insertObject:model atIndex:i];
-                }else{
-                    
-                    
-                    temp[i].temperature = item.time[i].elementValue.firstObject.value;
-                    
-                }
-            }
-        }
-    }
-    data = [temp copy];
-    return  data;
-}
-+ (MainPageViewModel *)getMainPageViewModel:(Location *)element{
-    MainPageViewModel *mainPageViewModel = [[MainPageViewModel alloc]init];
-    mainPageViewModel.locationName = element.locationName;
-    mainPageViewModel.week = [self changeDateToWeek:[NSDate date]];
-    for (WeatherElement *item in element.weatherElement) {
-        if([item.elementName isEqualToString:@"T"]){
-            mainPageViewModel.t = item.time.firstObject.elementValue.firstObject.value;
-        }
-        if([item.elementName isEqualToString:@"Wx"]){
-            mainPageViewModel.wx = item.time.firstObject.elementValue.firstObject.value;
-        }
-        if([item.elementName isEqualToString:@"PoP6h"]){
-            mainPageViewModel.pop = item.time.firstObject.elementValue.firstObject.value;
-        }
-        if([item.elementName isEqualToString:@"RH"]){
-            mainPageViewModel.relativeHumidity = item.time.firstObject.elementValue.firstObject.value;
-        }
-        if([item.elementName isEqualToString:@"AT"]){
-            mainPageViewModel.apparentTemperature = item.time.firstObject.elementValue.firstObject.value;
-        }
-        if([item.elementName isEqualToString:@"CI"]){
-            mainPageViewModel.comfortIndex = item.time.firstObject.elementValue.firstObject.value;
-        }
-        if([item.elementName isEqualToString:@"WS"]){
-            mainPageViewModel.windSpeed = item.time.firstObject.elementValue.firstObject.value;
-        }
-        if([item.elementName isEqualToString:@"WD"]){
-            mainPageViewModel.windDirection = item.time.firstObject.elementValue.firstObject.value;
-        }
-        if([item.elementName isEqualToString:@"WeatherDescription"]){
-            mainPageViewModel.weatherDescription = item.time.firstObject.elementValue.firstObject.value;
-        }
-    }
-    return mainPageViewModel;
-}
-+ (NSMutableDictionary<NSString *,WeatherViewModel *> * ) getWeatherViewModels:(Location *) element{
-    NSMutableDictionary<NSString *,WeatherViewModel *> *dict = [NSMutableDictionary dictionary];
+@implementation DateFormaterManager
++ (NSMutableDictionary<NSString *,WeekWeatherViewModel *> * ) getWeatherViewModels:(Location *) element{
+    NSMutableDictionary<NSString *,WeekWeatherViewModel *> *dict = [NSMutableDictionary dictionary];
     NSArray<NSString* > *weeks = [self getSevenDayWeekFormNow];
     for (NSString *key in weeks) {
-        WeatherViewModel *item = [[WeatherViewModel alloc]init];
-        item.week = key;
+        WeekWeatherViewModel *item = [[WeekWeatherViewModel alloc]init];
+        item.dayOfWeek = key;
         [dict setObject:item forKey:key];
     }
     for (WeatherElement *item in element.weatherElement) {

@@ -10,8 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface WeatherViewModel : NSObject
-@property (strong, nonatomic) NSString *week;
+@interface WeekWeatherViewModel : NSObject
+@property (strong, nonatomic) NSString *dayOfWeek;
 @property (strong, nonatomic) NSString *weather;
 @property (strong, nonatomic) NSString *maxT;
 @property (strong, nonatomic) NSString *minT;

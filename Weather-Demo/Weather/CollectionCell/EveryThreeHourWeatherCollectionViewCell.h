@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "WeaterCollevtionViewModel.h"
+#import "EveryThreeHourWeatherCollectionViewModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface WeatherCollectionViewCell : UICollectionViewCell
+@interface EveryThreeHourWeatherCollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UILabel *timeOutlet;
 @property (weak, nonatomic) IBOutlet UILabel *weatherOutlet;
 @property (weak, nonatomic) IBOutlet UILabel *temperatureOutlet;

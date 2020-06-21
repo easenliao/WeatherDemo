@@ -5,22 +5,21 @@
 #define kUpdateInterval 3600
 
 @interface ViewController ()
-@property (strong, nonatomic) DetailWeatherTableViewController *containerView;
+@property (strong, nonatomic) DetailWeatherTableViewController *containerViewController;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) NSDate *lastUpdate;
+@property (strong, nonatomic) NSArray<EveryThreeHourWeatherCollectionViewModel *> *collectionData;
+
 @property (weak, nonatomic) IBOutlet UICollectionView *weatherCollectionOutlet;
 @property (weak, nonatomic) IBOutlet UIScrollView *weatherInfoScrollView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *summaryHeightOutlet;
 @property (weak, nonatomic) IBOutlet UIView *summaryViewOutlet;
-
 @property (weak, nonatomic) IBOutlet UILabel *areaOutlet;
 @property (weak, nonatomic) IBOutlet UILabel *wxOutlet;
 @property (weak, nonatomic) IBOutlet UILabel *temperatureOutlet;
 @property (weak, nonatomic) IBOutlet UILabel *weatherDescriptionOutlet;
 @property (weak, nonatomic) IBOutlet UILabel *weekOutlet;
-
-@property (strong, nonatomic) IBOutletCollection(WeatherView) NSArray *weekWeatherOutlets;
-@property (strong, nonatomic) NSArray<WeaterCollevtionViewModel *> *collectionData;
+@property (strong, nonatomic) IBOutletCollection(WeekWeatherView) NSArray *weekWeatherOutlets;
 
 
 @end
@@ -40,12 +39,20 @@
     NSString * segueName = segue.identifier;
     if ([segueName isEqualToString: @"DetailWeatherTableViewController"]) {
         DetailWeatherTableViewController * childViewController = (DetailWeatherTableViewController *) [segue destinationViewController];
-        self.containerView = childViewController;
+        self.containerViewController = childViewController;
     }
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+- (void)setEveryThreeHourData:(Weather *)data{
+    MainPageViewModel *model = [MainPageViewModel weatherFormAPIToMainPageViewModel:data];
+    self.collectionData = [EveryThreeHourWeatherCollectionViewModel gwtCollectViewsFormAPIData:data];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self setMainPage:model];
+        [self.weatherCollectionOutlet reloadData];
+    });
 }
 - (void)setCollectionView{
     self.weatherCollectionOutlet.delegate = self;
@@ -54,22 +61,28 @@
     self.weatherCollectionOutlet.layer.borderColor = UIColor.whiteColor.CGColor;
 }
 - (void)setMainPage:(MainPageViewModel *) model{
-    [self.temperatureOutlet setText:model.t];
-    [self.wxOutlet setText:model.wx];
+    [self.temperatureOutlet setText:model.temperature];
+    [self.wxOutlet setText:model.weather];
     [self.areaOutlet setText:model.locationName];
     [self.weatherDescriptionOutlet setText:model.weatherDescription];
-    [self.weekOutlet setText:model.week];
-    [self.containerView.popOutlet setText:model.pop];
-    [self.containerView.humidityOutlet setText:model.relativeHumidity];
-    [self.containerView.apparentTemperatureOutlet setText:model.apparentTemperature];
-    [self.containerView.confortIndexOutlet setText:model.comfortIndex];
-    [self.containerView.windScaleOutlet setText:model.windSpeed];
-    [self.containerView.windDirectionOutlet setText:model.windDirection];
+    [self.weekOutlet setText:model.dayOfWeek];
+    [self.containerViewController.popOutlet setText:model.probabilityOfPrecipitation];
+    [self.containerViewController.humidityOutlet setText:model.relativeHumidity];
+    [self.containerViewController.apparentTemperatureOutlet setText:model.apparentTemperature];
+    [self.containerViewController.confortIndexOutlet setText:model.comfortIndex];
+    [self.containerViewController.windScaleOutlet setText:model.windSpeed];
+    [self.containerViewController.windDirectionOutlet setText:model.windDirection];
     
 }
-- (void) setWeekWeatherView:(NSArray<WeatherViewModel *> *) models{
+- (void) setWeekdata:(Weather *) data{
+    NSArray<WeekWeatherViewModel *> *weatherViews = [WeekWeatherViewModel getWeekWeatherViewModelsFormAPI:data];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self setWeekWeatherView:weatherViews];
+    });
+}
+- (void) setWeekWeatherView:(NSArray<WeekWeatherViewModel *> *) models{
     for (int i = 0 ; i < self.weekWeatherOutlets.count; i++){
-        WeatherView *item = self.weekWeatherOutlets[i];
+        WeekWeatherView *item = self.weekWeatherOutlets[i];
         [item setModel:models[i]];
     }
 }
@@ -104,18 +117,10 @@
         
         /// threedays weather
         [[OpenWeatherMapAPI sharedInstance]
-         fetchCurrentWeatherDataForLocation:[locations lastObject] APIURL:@"F-D0047-073"
+         fetchEveryThreeHourWeatherDataForLocation:[locations lastObject]
          completion:^(Weather *weatherData) {
-            MainPageViewModel *model = [MainPageViewModel alloc];
-            model = [WeatherModel getMainPageViewModel:weatherData.records.locations.firstObject.location.firstObject];
-            self.collectionData = [WeatherModel getCollectViews:weatherData.records.locations.firstObject.location.firstObject.weatherElement];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self setMainPage:model];
-                [self.weatherCollectionOutlet reloadData];
-            });
-            
+            [self setEveryThreeHourData:weatherData];
             self.lastUpdate = [NSDate date];
-            
         }
          failure:^(NSError *error) {
             NSLog(@"Failed: %@",error);
@@ -123,18 +128,9 @@
          ];
         /// a week weather
         [[OpenWeatherMapAPI sharedInstance]
-         fetchCurrentWeatherDataForLocation:[locations lastObject] APIURL:@"F-D0047-075"
-         completion:^(Weather *weatherData) {
-            NSDictionary<NSString *,WeatherViewModel *> *model = [WeatherModel getWeatherViewModels:weatherData.records.locations.firstObject.location.firstObject];
-            NSArray *weeks = [WeatherModel getSevenDayWeekFormNow];
-            NSMutableArray<WeatherViewModel *> *weatherViews = [NSMutableArray array];
-            for (NSString *item in weeks) {
-                WeatherViewModel *m = [model objectForKey:item];
-                [weatherViews addObject: m];
-            }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self setWeekWeatherView:weatherViews];
-            });
+         fetchWeekWeatherDataForLocation:[locations lastObject] completion:^(Weather *weatherData) {
+            [self setWeekdata:weatherData];
+            
             
             self.lastUpdate = [NSDate date];
             
@@ -170,8 +166,8 @@
 #pragma mark - UICollectionViewDelegate Methods
 
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath { 
-    WeatherCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"weathercollectioncell" forIndexPath:indexPath];
-    WeaterCollevtionViewModel *data = self.collectionData[indexPath.row];
+    EveryThreeHourWeatherCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"EveryThreeHourWeatherCollectionViewCell" forIndexPath:indexPath];
+    EveryThreeHourWeatherCollectionViewModel *data = self.collectionData[indexPath.row];
     [cell setModel:data.time Weather:data.weatherDescription Temperature:data.temperature];
     return cell;
 }

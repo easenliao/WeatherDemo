@@ -6,13 +6,13 @@
 //  Copyright © 2020 Aron Beaver. All rights reserved.
 //
 
-#import "WeatherViewModel.h"
+#import "WeekWeatherViewModel.h"
 
-@implementation WeatherViewModel
+@implementation WeekWeatherViewModel
 -(id)initWithWeek:(NSString *) week Weather:(NSString *) weather MaxT:(NSString *) maxT MinT:(NSString *) minT{
     if (self = [super init])
      {
-         self.week = week;
+         self.dayOfWeek = week;
          self.weather = weather;
          self.maxT = maxT;
          self.minT = minT;

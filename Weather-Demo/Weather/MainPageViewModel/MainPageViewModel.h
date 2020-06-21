@@ -7,21 +7,21 @@
 //
 
 #import <Foundation/Foundation.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MainPageViewModel : NSObject
 @property (strong, nonatomic) NSString *locationName;
-@property (strong, nonatomic) NSString *t;
-@property (strong, nonatomic) NSString *wx;
-@property (strong, nonatomic) NSString *pop;
+@property (strong, nonatomic) NSString *temperature;
+@property (strong, nonatomic) NSString *weather;
+@property (strong, nonatomic) NSString *probabilityOfPrecipitation;
 @property (strong, nonatomic) NSString *relativeHumidity;
 @property (strong, nonatomic) NSString *apparentTemperature;
 @property (strong, nonatomic) NSString *comfortIndex;
 @property (strong, nonatomic) NSString *windSpeed;
 @property (strong, nonatomic) NSString *windDirection;
 @property (strong, nonatomic) NSString *weatherDescription;
-@property (strong, nonatomic) NSString *week;
+@property (strong, nonatomic) NSString *dayOfWeek
+;
 @end
 
 NS_ASSUME_NONNULL_END

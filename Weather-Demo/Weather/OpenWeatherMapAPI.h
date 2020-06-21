@@ -2,11 +2,11 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import "Weather.h"
-#import "WeatherModel.h"
+#import "DateFormaterManager.h"
 @interface OpenWeatherMapAPI : NSObject
 
 + (OpenWeatherMapAPI *)sharedInstance;
 
-- (void)fetchCurrentWeatherDataForLocation:(CLLocation *)location APIURL:(NSString *) url completion:(void(^)(Weather *weatherData))completion failure:(void(^)(NSError* error))failure;
-
+- (void)fetchWeekWeatherDataForLocation:(CLLocation *)location completion:(void(^)(Weather *weatherData))completion failure:(void(^)(NSError* error))failure;
+- (void)fetchEveryThreeHourWeatherDataForLocation:(CLLocation *)location completion:(void(^)(Weather *weatherData))completion failure:(void(^)(NSError* error))failure;
 @end

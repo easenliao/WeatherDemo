@@ -1,8 +1,8 @@
 
 
-#import "WeatherCollectionViewCell.h"
+#import "EveryThreeHourWeatherCollectionViewCell.h"
 
-@implementation WeatherCollectionViewCell
+@implementation EveryThreeHourWeatherCollectionViewCell
 -(void)setModel:(NSString *) time Weather:(NSString *) weather Temperature:(NSString *) temperature{
     [_timeOutlet setText:time];
     [_weatherOutlet setText:weather];

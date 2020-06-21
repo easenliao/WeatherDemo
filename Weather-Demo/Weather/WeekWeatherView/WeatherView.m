@@ -6,24 +6,16 @@
 //  Copyright © 2020 Aron Beaver. All rights reserved.
 //
 
-#import "WeatherView.h"
-@interface WeatherView()
+#import "WeekWeatherView.h"
+@interface WeekWeatherView()
 @property (weak, nonatomic) IBOutlet UILabel *weekOutlet;
 @property (weak, nonatomic) IBOutlet UILabel *weatherOutlet;
 @property (weak, nonatomic) IBOutlet UILabel *maxTOutlet;
 @property (weak, nonatomic) IBOutlet UILabel *minTOutlet;
 
 @end
-@implementation WeatherView
-UINib *nib;
+@implementation WeekWeatherView
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 - (instancetype)initWithCoder:(NSCoder *)coder{
     self = [super initWithCoder:coder];
     if (self){
@@ -41,7 +33,7 @@ UINib *nib;
     return self;
 }
 -(void)loadNibContent{
-    nib = [UINib nibWithNibName:@"WeatherView" bundle:[NSBundle bundleForClass:[self class]]];
+    UINib *nib = [UINib nibWithNibName:NSStringFromClass([self class]) bundle:[NSBundle bundleForClass:[self class]]];
     NSArray<UIView *> *views = [nib instantiateWithOwner:self options:nil];
     UIView *contentView = views.firstObject;
     if (contentView == nil){
@@ -55,11 +47,11 @@ UINib *nib;
     [contentView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor].active = YES;
     [contentView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor].active = YES;
 }
--(void)setModel:(WeatherViewModel *) model{
+-(void)setModel:(WeekWeatherViewModel *) model{
     [self.maxTOutlet setText:model.maxT];
     [self.minTOutlet setText:model.minT];
     [self.weatherOutlet setText:model.weather];
-    [self.weekOutlet setText:model.week];
+    [self.weekOutlet setText:model.dayOfWeek];
 }
 
 @end

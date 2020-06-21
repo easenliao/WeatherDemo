@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "WeatherViewModel.h"
+#import "WeekWeatherViewModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface WeatherView : UIView
--(void)setModel:(WeatherViewModel *) model;
+@interface WeekWeatherView : UIView
+-(void)setModel:(WeekWeatherViewModel *) model;
 @end
 
 NS_ASSUME_NONNULL_END

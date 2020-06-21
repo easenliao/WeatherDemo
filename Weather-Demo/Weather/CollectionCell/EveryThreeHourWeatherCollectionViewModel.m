@@ -1,8 +1,8 @@
 
 
-#import "WeaterCollevtionViewModel.h"
+#import "EveryThreeHourWeatherCollectionViewModel.h"
 
-@implementation WeaterCollevtionViewModel
+@implementation EveryThreeHourWeatherCollectionViewModel
 - (id) init:(NSString *) time WeatherDescription:(NSString *)weatherDescription Temperature:(NSString *)temperature{
     if (self = [super init])
     {
