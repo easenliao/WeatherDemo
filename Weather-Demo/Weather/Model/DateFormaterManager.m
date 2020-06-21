@@ -9,38 +9,6 @@
 #import "DateFormaterManager.h"
 #import "Weather.h"
 @implementation DateFormaterManager
-+ (NSMutableDictionary<NSString *,WeekWeatherViewModel *> * ) getWeatherViewModels:(Location *) element{
-    NSMutableDictionary<NSString *,WeekWeatherViewModel *> *dict = [NSMutableDictionary dictionary];
-    NSArray<NSString* > *weeks = [self getSevenDayWeekFormNow];
-    for (NSString *key in weeks) {
-        WeekWeatherViewModel *item = [[WeekWeatherViewModel alloc]init];
-        item.dayOfWeek = key;
-        [dict setObject:item forKey:key];
-    }
-    for (WeatherElement *item in element.weatherElement) {
-        if([item.elementName isEqualToString:@"MinT"]){
-            for (Time *i in item.time) {
-                NSString *key = [self changeDateStringToWeek:i.startTime];
-                [dict objectForKey:key].minT = ([[dict objectForKey:key].minT intValue] > [i.elementValue.firstObject.value intValue] || [dict objectForKey:key].minT == nil) ? i.elementValue.firstObject.value : [dict objectForKey:key].minT;
-                
-            }
-        }
-        if([item.elementName isEqualToString:@"MaxT"]){
-            for (Time *i in item.time) {
-                NSString *key = [self changeDateStringToWeek:i.startTime];
-                [dict objectForKey:key].maxT = ([[dict objectForKey:key].maxT intValue] < [i.elementValue.firstObject.value intValue] || [dict objectForKey:key].maxT == nil) ? i.elementValue.firstObject.value : [dict objectForKey:key].maxT;
-                
-            }
-        }
-        if([item.elementName isEqualToString:@"Wx"]){
-            for (Time *i in item.time) {
-                NSString *key = [self changeDateStringToWeek:i.startTime];
-                [dict objectForKey:key].weather = i.elementValue.firstObject.value;
-            }
-        }
-    }
-    return  dict;
-}
 /// yyyy-MM-dd HH:mm:ss -> dd號HH點
 +(NSString *)changeDateFormat:(NSString *) date{
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
