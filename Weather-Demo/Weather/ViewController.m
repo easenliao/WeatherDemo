@@ -31,30 +31,31 @@
     
     self.locationManager = [[CLLocationManager alloc] init];
     [self enableLocationServices];
-    [self setCollectionView];
-    self.weatherInfoScrollView.delegate = self;
+    [self setupCollectionView];
+    [self setupWeatherInfoScrollView];
 }
+
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    [self setupContainerViewController:segue];
+}
+-(void) setupContainerViewController:(UIStoryboardSegue *)segue{
     NSString * segueName = segue.identifier;
-    if ([segueName isEqualToString: @"DetailWeatherTableViewController"]) {
-        DetailWeatherTableViewController * childViewController = (DetailWeatherTableViewController *) [segue destinationViewController];
-        self.containerViewController = childViewController;
-    }
+       if ([segueName isEqualToString: @"DetailWeatherTableViewController"]) {
+           DetailWeatherTableViewController * childViewController = (DetailWeatherTableViewController *) [segue destinationViewController];
+           self.containerViewController = childViewController;
+       }
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
-- (void)setEveryThreeHourData:(Weather *)data{
-    MainPageViewModel *model = [MainPageViewModel weatherFormAPIToMainPageViewModel:data];
-    self.collectionData = [EveryThreeHourWeatherCollectionViewModel gwtCollectViewsFormAPIData:data];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self setMainPage:model];
-        [self.weatherCollectionOutlet reloadData];
-    });
+
+- (void)setupWeatherInfoScrollView{
+    self.weatherInfoScrollView.delegate = self;
+
 }
-- (void)setCollectionView{
+- (void)setupCollectionView{
     self.weatherCollectionOutlet.delegate = self;
     self.weatherCollectionOutlet.dataSource = self;
     self.weatherCollectionOutlet.layer.borderWidth = 0.5f;
@@ -74,18 +75,24 @@
     [self.containerViewController.windDirectionOutlet setText:model.windDirection];
     
 }
-- (void) setWeekdata:(Weather *) data{
-    NSArray<WeekWeatherViewModel *> *weatherViews = [WeekWeatherViewModel getWeekWeatherViewModelsFormAPI:data];
+- (void)setEveryThreeHourDataView:(Weather *)data{
+    MainPageViewModel *model = [MainPageViewModel weatherFormAPIToMainPageViewModel:data];
+    self.collectionData = [EveryThreeHourWeatherCollectionViewModel gwtCollectViewsFormAPIData:data];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self setWeekWeatherView:weatherViews];
+        [self setMainPage:model];
+        [self.weatherCollectionOutlet reloadData];
     });
 }
-- (void) setWeekWeatherView:(NSArray<WeekWeatherViewModel *> *) models{
-    for (int i = 0 ; i < self.weekWeatherOutlets.count; i++){
-        WeekWeatherView *item = self.weekWeatherOutlets[i];
-        [item setModel:models[i]];
-    }
+- (void) setWeekDataView:(Weather *) data{
+    NSArray<WeekWeatherViewModel *> *WeekWeatherViews = [WeekWeatherViewModel getWeekWeatherViewModelsFormAPI:data];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (int i = 0 ; i < self.weekWeatherOutlets.count; i++){
+            WeekWeatherView *item = self.weekWeatherOutlets[i];
+            [item setModel:WeekWeatherViews[i]];
+        }
+    });
 }
+
 #pragma mark - Location Services
 
 - (void)enableLocationServices {
@@ -113,33 +120,7 @@
 #pragma mark - CLLocationManagerDelegate Methods
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
-    if ([[NSDate date] timeIntervalSinceDate:self.lastUpdate] > kUpdateInterval || !self.lastUpdate) {
-        
-        /// threedays weather
-        [[OpenWeatherMapAPI sharedInstance]
-         fetchEveryThreeHourWeatherDataForLocation:[locations lastObject]
-         completion:^(Weather *weatherData) {
-            [self setEveryThreeHourData:weatherData];
-            self.lastUpdate = [NSDate date];
-        }
-         failure:^(NSError *error) {
-            NSLog(@"Failed: %@",error);
-        }
-         ];
-        /// a week weather
-        [[OpenWeatherMapAPI sharedInstance]
-         fetchWeekWeatherDataForLocation:[locations lastObject] completion:^(Weather *weatherData) {
-            [self setWeekdata:weatherData];
-            
-            
-            self.lastUpdate = [NSDate date];
-            
-        }
-         failure:^(NSError *error) {
-            NSLog(@"Failed: %@",error);
-        }
-         ];
-    }
+    [self fetchDataFormWeatherAPI: [locations lastObject]];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
@@ -160,7 +141,37 @@
             break;
     }
 }
+#pragma mark - fetchData Methods
 
+- (void)fetchDataFormWeatherAPI:(CLLocation*) location{
+    [self fetchEveryThreeHourDataThanSetView:location];
+    [self fetchWeekDataThanSetView:location];
+}
+- (void)fetchEveryThreeHourDataThanSetView:(CLLocation*) location{
+    if ([[NSDate date] timeIntervalSinceDate:self.lastUpdate] > kUpdateInterval || !self.lastUpdate) {
+        [[OpenWeatherMapAPI sharedInstance]
+         fetchWeekWeatherDataForLocation:location completion:^(Weather *weatherData) {
+            [self setWeekDataView:weatherData];
+            self.lastUpdate = [NSDate date];
+        }
+         failure:^(NSError *error) {
+            NSLog(@"Failed: %@",error);
+        }];
+    }
+}
+- (void)fetchWeekDataThanSetView:(CLLocation*) location{
+    if ([[NSDate date] timeIntervalSinceDate:self.lastUpdate] > kUpdateInterval || !self.lastUpdate) {
+        [[OpenWeatherMapAPI sharedInstance]
+         fetchEveryThreeHourWeatherDataForLocation:location
+         completion:^(Weather *weatherData) {
+            [self setEveryThreeHourDataView:weatherData];
+            self.lastUpdate = [NSDate date];
+        }
+         failure:^(NSError *error) {
+            NSLog(@"Failed: %@",error);
+        }];
+    }
+}
 
 
 #pragma mark - UICollectionViewDelegate Methods
@@ -185,6 +196,7 @@
     *targetContentOffset = scrollView.contentOffset;
     [self isShowSummaryView:(scrollView.contentOffset.y <= 0)];
 }
+
 -(void) isShowSummaryView:(BOOL) isShow{
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.2 animations:^{
